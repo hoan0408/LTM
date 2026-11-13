@@ -1,45 +1,48 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package UDP;
 
 import java.net.*;
 import java.util.*;
+
+/**
+ *
+ * @author ASUS
+ */
 public class TimSoConThieu {
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
         DatagramSocket socket = new DatagramSocket();
-        InetAddress sA = InetAddress.getByName("");
-        int sP = 2207;
-
-        String ma = ";B23DCCN322;6g7J8k9L";
-        DatagramPacket dpGui = new DatagramPacket(ma.getBytes(), ma.length(),sA, sP);
+        InetAddress iA = InetAddress.getByName("36.50.135.242");
+        int iP  = 2207;
+        String ma = ";B23DCCN322;oYlH7On0";
+        DatagramPacket dpGui = new DatagramPacket(ma.getBytes(),ma.length(),iA,iP);
         socket.send(dpGui);
-
-        byte[] buffer = new byte[1024];
-        DatagramPacket dpNhan = new DatagramPacket(buffer,buffer.length);
+        
+        byte[] buffer  = new byte[1024];
+        DatagramPacket dpNhan = new DatagramPacket(buffer, buffer.length);
         socket.receive(dpNhan);
         String s = new String(dpNhan.getData());
-        String[] tmp = s.trim().split(";");
-        String rI = tmp[0];
-        int n = Integer.parseInt(tmp[1].trim());
-        String []tmps = tmp[2].trim().split(",");
-
-        int [] cnt = new int[n+1];
-        for(String x :tmps){
-            int  num = Integer.parseInt(x);
-            cnt[num]++;
+        String []tmps = s.trim().split(";");
+        String rI = tmps[0].trim();
+        int n = Integer.parseInt(tmps[1]);
+        int [] cnt = new int[n + 1];
+        String [] arr = tmps[2].trim().split(",");
+        for(int i = 0;i<arr.length;i++){
+            int x = Integer.parseInt(arr[i]);
+            cnt[x]++;
         }
-        ArrayList<Integer> arr = new ArrayList<>();
+        String data = "";
         for(int i = 1;i<= n;i++){
             if(cnt[i] == 0){
-                arr.add(i);
+                 data+= i + ",";
             }
         }
-        String res = rI + ";";
-        for(int i = 0;i< arr.size();i++){
-            res += arr.get(i) + ',';
-        }
-        res = res.substring(0, res.length() - 1);
-        DatagramPacket dpGui1 = new DatagramPacket(res.getBytes(),res.length(),sA,sP);
+        String res = rI + ";" + data.substring(0,data.length()-1);
+        DatagramPacket dpGui1 = new DatagramPacket(res.getBytes(), res.length(),iA,iP);
         socket.send(dpGui1);
         socket.close();
+        
     }
-    
 }
